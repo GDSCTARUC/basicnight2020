@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Firebase CRUD</title>
+    <!-- The core Firebase JS SDK is always required and must be listed first -->
+    <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-database.js"></script>
+
+    <!-- TODO: Add SDKs for Firebase products that you want to use
+        https://firebase.google.com/docs/web/setup#available-libraries -->
+
+    <script>
+    // Your web app's Firebase configuration
+    var firebaseConfig = {
+        apiKey: "AIzaSyBWbZSx7VxpPgGTMOE_y9yz-c0KkbMlwVQ",
+        authDomain: "dsc-firebase-79c87.firebaseapp.com",
+        projectId: "dsc-firebase-79c87",
+        storageBucket: "dsc-firebase-79c87.appspot.com",
+        messagingSenderId: "552878898343",
+        appId: "1:552878898343:web:b17dc9f097502228076f82"
+    };
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    </script>
+</head>
+<body>
+    <table>
+        <tr>
+            <td>Student ID:</td>
+            <td><input type="text" id="student-id"></td>
+        </tr>
+
+        <tr>
+            <td>Student Name:</td>
+            <td><input type="text" id="student-name"></td>
+        </tr>
+
+        <tr>
+            <td>Student Program</td>
+            <td><input type="text" id="student-program"></td>
+        </tr>
+
+        <tr>
+            <td>Student Status</td>
+            <td><input type="text" id="student-status"></td>
+        </tr>
+    </table>
+
+    <button onclick="createStudent()">Create</button>
+    <button onclick="readStudent()">Read</button>
+    <button onclick="updateStudent()">Update</button>
+    <button onclick="deleteStudent()">Delete</button>
+    <button onclick="clearForm()">Clear</button>
+
+    <script>
+        function getFormValue()
+        {
+            student_id = document.getElementById("student-id").value;
+            student_name = document.getElementById("student-name").value;
+            student_program = document.getElementById("student-program").value;
+            student_status = document.getElementById("student-status").value;
+        }
+
+
+        function insertForm(student_id, student_name, student_program, student_status)
+        {
+            document.getElementById("student-id").value = student_id;
+            document.getElementById("student-name").value = student_name;
+            document.getElementById("student-program").value = student_program;
+            document.getElementById("student-status").value = student_status;
+        }
+
+        function clearForm()
+        {
+            insertForm("", "", "", "");
+        }
+
+        function createStudent()
+        {
+            // Get value
+            getFormValue();
+
+            firebase.database().ref("student/" + student_id).set({
+                studentName : student_name,
+                studentProgram : student_program,
+                studentStatus : student_status
+            });
+        }
+
+        function readStudent()
+        {
+            // Get value
+            getFormValue();
+
+            firebase.database().ref("student/" + student_id).on("value", function(snapshot){
+                insertForm(
+                    student_id,
+                    snapshot.val().studentName,
+                    snapshot.val().studentProgram,
+                    snapshot.val().studentStatus
+                );
+            })
+        }
+
+        function updateStudent()
+        {
+            // Get value
+            getFormValue();
+
+            firebase.database().ref("student/" + student_id).update({
+                studentName : student_name,
+                studentProgram : student_program,
+                studentStatus : student_status
+            });
+        }
+
+        function deleteStudent()
+        {
+            // Get value
+            getFormValue();
+
+            // Delete record
+            firebase.database().ref("student/" + student_id).remove();
+        }
+    </script>
+</body>
+</html>
